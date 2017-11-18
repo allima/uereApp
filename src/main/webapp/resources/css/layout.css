@@ -1,0 +1,144 @@
+/* TOPBAR */
+.if-topbar {
+	position: fixed;
+	top: 0;
+	right: 0;
+	left: 0;
+	min-height: 50px;
+	z-index: 9999;
+	
+	background-color: #545454;
+}
+
+.if-topbar > img {
+	margin-top: 1px;
+	margin-left: 5px;
+}
+
+/* SIDEBAR */
+.if-sidebar {
+	position: fixed;
+	top: 55px;
+	bottom: 0;
+	left: 0;
+	width: 210px;
+	margin-left: -211px;
+	z-index: 9998;
+	transition: margin-left 0.5s;
+	overflow-y: auto;
+	
+	background-color: #f6f6f6;
+	border-right: 1px solid #eaeaea;
+}
+
+.if-sidebar.is-toggled {
+	margin-left: 0px;
+}
+
+@media (min-width: 960px) {
+	.if-sidebar {
+		margin-left: 0px;
+	}
+	
+	.if-sidebar.is-toggled {
+		margin-left: -211px;
+    }		
+}
+
+
+/* CONTENT */
+.if-content {
+	margin-top: 60px;
+	transition: margin-left 0.5s;
+}
+
+@media (min-width: 960px) {
+	.if-content {
+		margin-left: 210px;
+	}
+	
+    .if-content.is-toggled {
+		margin-left: 0;
+    }		
+}
+
+/* ICONE TOGGLE DA TOPBAR */
+.if-toggle {
+	float: right;
+	line-height: 50px;
+	margin-right: 15px;
+	
+	color: #fff;
+}
+
+
+/* Menu */
+
+.if-menu {
+	font-size: 1.1em;
+}
+
+.if-menu > ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.if-menu > ul a {
+	display: block;
+	padding: 10px 15px;
+	
+	text-decoration: none;
+	font-weight: 500;
+	color: #373737;
+} 
+
+.if-menu > ul i {
+	margin-right: 6px;
+}
+
+.if-menu > ul a:hover, .aw-menu > ul a:focus {
+	background-color: #dfdfdf;
+}
+
+.if-menu > ul .is-selected {
+	border-left: 3px solid #1e94d2;
+	background-color: #f3f3f3;
+}
+
+.if-menu > ul .is-selected a {
+	margin-left: -3px;
+	color: #15db87;
+}
+
+
+/* PAGE-TITLE */
+.if-page-title {
+	margin: 0;
+	padding: 20px 0;
+	
+	font-size: 1.5em;
+	color: #373737;
+}
+
+/* CUSTOMIZANDO A RESPONSIVIDADE DO TABVIEW */
+.ui-tabs .ui-tabs-nav li.ui-tabs-selected a {
+	color: #555;
+}
+
+@media (max-width: 640px) {
+	.ui-tabs.ui-tabs-top > .ui-tabs-nav li {
+		width: 100%;
+	}
+}
+
+/* CUSTOMIZANDO O PANELGRID DO PRIMEFACES*/
+.ui-panelgrid.panelgrid-noborder .ui-grid-responsive {
+	border: none;
+}
+
+@media (max-width: 640px) {
+	.ui-panelgrid.panelgrid-noborder .ui-grid-responsive .ui-grid-row {
+		border: none;
+	}
+}

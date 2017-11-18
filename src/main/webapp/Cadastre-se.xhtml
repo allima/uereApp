@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:o="http://omnifaces.org/ui">
+    
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>#{cadastroSeBean.editando ? 'Edição de usuário' : 'Novo usuário'}</title>
+
+        <h:outputStylesheet library="css" name="sistema.css"/>
+        <h:outputScript library="js" name="jquery.maskMoney.js"/>
+        <h:outputScript library="js" name="validadores.js"/>        
+    </h:head>
+    <h:body>
+    	<header>
+	
+            <div style="float: left">
+				<h:link outcome="/Home">
+					<h:graphicImage library="images" name="logo-uereapp-final.png" />
+				</h:link>
+			</div>    
+        </header>
+    
+    	  
+        <div id="conteudo">
+			
+    	<f:metadata>
+    		<o:viewParam name="usuario" value="#{cadastroSeBean.usuario}" />
+    		<f:viewAction action="#{cadastroSeBean.inicializar}" />
+    	</f:metadata>
+
+    	<h:form id="frm" prependId="false">
+			<p:focus context="frm" />
+			
+	    	<h1>#{cadastroSeBean.editando ? 'Edição de usuário' : 'Novo usuário'}</h1>
+	    	
+	    	<p:messages autoUpdate="true" closable="true" />
+	    	
+	    	<p:toolbar style="margin-top: 20px">
+	    		<p:toolbarGroup>
+	    			<p:commandButton value="Salvar" id="botaoSalvar"
+	    				action="#{cadastroSeBean.salvar}" 
+	    				ajax="false" />
+	    		</p:toolbarGroup>
+	    	</p:toolbar>
+	    	
+	    	<p:panelGrid columns="2" id="painel" style="width: 100%; margin-top: 20px"
+	    			columnClasses="rotulo, campo">	    		
+	    		
+	    		<p:outputLabel value="Nome" for="nome"/>
+	    		<p:inputText id="nome" size="60" maxlength="80" value="#{cadastroSeBean.usuario.nome}" required="true"/>
+	    		    			    		
+	    		<p:outputLabel value="E-mail" for="username"/>
+	    		<p:inputText id="username" size="60" maxlength="200" value="#{cadastroSeBean.usuario.email}" required="true"/>
+	    		
+	    		<p:outputLabel value="Senha" for="password"/>
+	    		<p:password id="password" size="14" maxlength="14" value="#{cadastroSeBean.usuario.senha}" required="true"/>
+	    			    		
+	    	</p:panelGrid>
+    	</h:form>
+    	
+    	
+   			
+		</div>
+		
+		<p:separator style="margin-top: 20px"/>
+		
+		<footer>
+			Sistema de baixo custo para monitoramento de pedidos e veículos -
+			<a href="http://bit.ly/Y8saFl" target="_blank">http://www.polodeinovacao.ifmg.edu.br/</a>
+		</footer>
+		
+		<script>
+			function configurarMoeda() {
+				$(".moeda").maskMoney({ decimal: ",", thousands: ".", allowZero: true });
+			}
+			
+			$(document).ready(function() {
+				configurarMoeda();
+			});
+		</script>
+	</h:body>    	  
+</html>

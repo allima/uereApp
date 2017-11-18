@@ -1,0 +1,85 @@
+<ui:composition template="/WEB-INF/template/LayoutResponsivo.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
+
+	<ui:define name="titulo">#{cadastroEmpresaBean.editando ? 'Edição dos dados da empresa' : 'Inserindo dados da empresa'}</ui:define>
+
+	<ui:define name="corpo">
+		<f:metadata>
+			<f:viewAction action="#{cadastroEmpresaBean.inicializar}" />
+		</f:metadata>
+
+		<h:form id="frm" prependId="false">
+			<p:focus context="frm" />
+
+			<h1>#{cadastroEmpresaBean.editando ? 'Edição dos dados da
+				empresa' : 'Inserção dos dados da empresa'}</h1>
+
+			<p:messages autoUpdate="true" closable="true" />
+
+			<p:toolbar style="margin-top: 20px">
+				<p:toolbarGroup>
+					<p:commandButton value="Salvar" id="botaoSalvar"
+						action="#{cadastroEmpresaBean.salvar}" update="@form"
+						validateClient="false" />
+				</p:toolbarGroup>
+			</p:toolbar>
+			<!-- 	columnClasses="rotulo, campo" -->
+			<p:panelGrid columns="2" id="painel"
+				style="width: 100%; margin-top: 20px"
+				columnClasses="ui-grid-col-2, ui-grid-col-10" layout="grid">
+
+				<p:outputLabel value="Nome do responsável" for="nome" />
+				<p:inputText id="nome" size="60" maxlength="80"
+					value="#{cadastroEmpresaBean.empresa.responsavel}" />
+
+				<p:outputLabel value="Documento" for="documento" />
+				<p:inputText id="documento" size="14" maxlength="14"
+					value="#{cadastroEmpresaBean.empresa.documentoReceitaFederal}" />
+
+				<p:outputLabel value="E-mail" for="email" />
+				<p:inputText id="email" size="60" maxlength="200"
+					value="#{cadastroEmpresaBean.empresa.email}" />
+			</p:panelGrid>
+
+
+			<!-- "rotulo, campo, rotulo, campo" -->
+			<p:panelGrid columns="4" style="width: 100%"
+				columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-2, ui-grid-col-4"
+				layout="grid">
+
+
+				<p:outputLabel value="Logradouro" for="route" />
+				<p:inputText id="route" size="50"
+					value="#{cadastroEmpresaBean.empresa.logradouro}" />
+
+				<p:outputLabel value="Número" for="street_number" />
+				<p:inputText id="street_number" size="5"
+					value="#{cadastroEmpresaBean.empresa.numero}" />
+
+				<p:outputLabel value="Complemento" for="Complemento" />
+				<p:inputText id="Complemento" size="50"
+					value="#{cadastroEmpresaBean.empresa.complemento}" />
+
+				<p:outputLabel value="Cidade" for="administrative_area_level_2" />
+				<p:inputText id="administrative_area_level_2" size="20"
+					value="#{cadastroEmpresaBean.empresa.cidade}" />
+
+				<p:outputLabel value="Estado" for="administrative_area_level_1" />
+				<p:inputText id="administrative_area_level_1" size="20"
+					value="#{cadastroEmpresaBean.empresa.uf}" />
+
+				<p:outputLabel value="CEP" for="postal_code" />
+				<p:inputText id="postal_code" size="10"
+					value="#{cadastroEmpresaBean.empresa.cep}" />
+
+			</p:panelGrid>
+
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>

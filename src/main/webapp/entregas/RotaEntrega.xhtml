@@ -1,0 +1,125 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
+
+	<ui:define name="titulo">Rota da entrega</ui:define>
+
+	<ui:define name="corpo">
+
+		<f:metadata>
+			<o:viewParam name="entrega_id" value="#{rotaEntregaBean.id_entrega}" />
+			<f:viewAction action="#{rotaEntregaBean.inicializar}" />
+		</f:metadata>
+
+		<h:form id="frmRota">
+
+			<p:focus context="frmRota" />
+			<h1>Informações da entrega</h1>
+			<p:messages autoUpdate="true" closable="true" />
+
+			<!-- campo que receberá do javascript a ordem que a rota foi gerada, a classe bean pegara
+			     a ordem para gerar a tabela com os tempos e distancia de cada entrega-->
+			<p:inputText  id="ordemRota" type="hidden"
+				value="#{rotaEntregaBean.ordemEntregas}" />
+			<br />
+			<br />
+			<br />
+			<p:outputLabel
+				value="Entregador: #{rotaEntregaBean.entrega.entregador.nome}" />
+
+			<p:poll interval="3" listener="#{rotaEntregaBean.atualizaPosicao()}"
+				widgetVar="myPoll" autoStart="false" update="entregasTempo"
+				oncomplete="entregador(xhr, status, args)" />
+
+			<p:panel style="margin-top: 20px; width: 70%; margin: auto;"
+				id="entregas">
+
+				<f:facet name="header">
+						Entregas
+						<a href="#" onclick="PF('myPoll').start();"> <p:commandButton
+							id="btnMapa" value="Gerar Rota" icon="ui-icon-pin-s"
+							actionListener="#{rotaEntregaBean.gerarMapa()}"
+							style="float:right" oncomplete="initMap(xhr, status, args)" />
+					</a>
+
+				</f:facet>
+
+				<p:dataTable id="entregasTable"
+					value="#{rotaEntregaBean.entrega.itens}" var="itensPedido"
+					emptyMessage="Nenhum pedido encontrado." rows="15" paginator="true"
+					paginatorAlwaysVisible="false" paginatorPosition="bottom">
+
+					<p:column headerText="Número"
+						style="text-align: center; width: 100px"
+						sortBy="#{itensPedido.pedido.id}">
+						<h:outputText value="#{itensPedido.pedido.id}" />
+					</p:column>
+
+					<p:column headerText="Cliente">
+						<h:outputText value="#{itensPedido.pedido.cliente.nome}" />
+					</p:column>
+
+					<p:column headerText="Data da venda"
+						style="text-align: center; width: 140px">
+						<h:outputText value="#{itensPedido.pedido.dataCriacao}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Status" style="width: 100px">
+						<h:outputText value="#{itensPedido.pedido.status}" />
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+
+			<div
+				style="margin-top: 20px; width: 70%; margin: auto; height: 400px"
+				id="map"></div>
+
+
+				<!--  tabela que cotêm tempo e distância de cada entrega, identificada por nome do cliente -->
+				<p:dataTable id="entregasTempo" 
+					value="#{rotaEntregaBean.tempoEntrega}" var="entregasTemp"
+					emptyMessage="Nenhuma entrega encontrada." rows="15"
+					paginator="true" paginatorAlwaysVisible="false"
+					paginatorPosition="bottom">
+
+					<p:column headerText="Nome Cliente"
+						style="text-align: center; width: 30px">
+						<h:outputText value="#{entregasTemp.nomeCliente}" />
+					</p:column>
+
+					<p:column headerText="Distancia até a Entrega"
+						style="text-align: center; width: 10px">
+						<h:outputText value="#{entregasTemp.distancia}" />
+					</p:column>
+
+					<p:column headerText="Tempo para Entrega"
+						style="text-align: center; width: 10px">
+						<h:outputText value="#{entregasTemp.tempo}" />
+					</p:column>
+					
+					<p:column headerText="Ponto no Mapa"
+						style="text-align: center; width: 10px">
+						<h:outputText value="#{entregasTemp.pontoMapa}" />
+					</p:column>
+
+					<p:column headerText="Status" style="width: 30px">
+						<h:outputText value="#{entregasTemp.status}" />
+					</p:column>
+				</p:dataTable>
+
+			
+
+			<!-- script para renderização do mapa -->
+			<script type="text/javascript"
+				src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCg6g7uSnQA3QniTXbAQRoEXP3yZiIAfpA&amp;"
+				async="async" defer="defer"> </script>
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>

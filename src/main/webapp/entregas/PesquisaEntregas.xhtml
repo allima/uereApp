@@ -1,0 +1,125 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="titulo">Pesquisa de entregas</ui:define>
+    
+    <ui:define name="corpo">
+    	<h:form id="frmPesquisaEntregas">
+	    	<h1>Pesquisa de entregas</h1>
+	    	
+	    	<p:toolbar style="margin-top: 20px">
+	    		<p:toolbarGroup>
+	    			<p:commandButton value="Pesquisar" update="@form" />
+	    		</p:toolbarGroup>
+	    		<p:toolbarGroup align="right">
+					<p:commandButton value="Exportar para XLS" ajax="false">
+						<p:dataExporter type="xls" target="entregasTable"
+							fileName="entregas" postProcessor="#{pesquisaEntregasBean.posProcessarXls}" />
+					</p:commandButton>
+					
+	    			<p:button value="Novo" outcome="/entregas/CadastroEntrega" />
+	    		</p:toolbarGroup>
+	    	</p:toolbar>
+	    	
+	    	<p:panelGrid columns="2" id="painel" style="width: 100%; margin-top: 20px"
+	    			columnClasses="rotulo, campo">
+	    		<p:outputLabel value="Número" />
+	    		<h:panelGroup>
+	    			<p:inputText size="10" value="#{pesquisaEntregasBean.filtro.numeroDe}" />
+	    			a
+	    			<p:inputText size="10" value="#{pesquisaEntregasBean.filtro.numeroAte}" />
+	    		</h:panelGroup>
+	    		
+	    		<p:outputLabel value="Data de distribuição do pedido" />
+	    		<h:panelGroup>
+	    			<p:calendar size="10" pattern="dd/MM/yyyy" locale="pt"
+	    				value="#{pesquisaEntregasBean.filtro.dataDistribuicaoDe}" />
+	    			a
+	    			<p:calendar size="10" pattern="dd/MM/yyyy" locale="pt"
+	    				value="#{pesquisaEntregasBean.filtro.dataDistribuicaoAte}" />
+	    		</h:panelGroup>
+	    		
+	    		<p:outputLabel value="Entregador" />
+	    		<p:inputText size="40" value="#{pesquisaEntregasBean.filtro.nomeEntregador}" />
+	    		
+	    		<p:outputLabel value="Cliente" />
+	    		<p:inputText size="40" value="#{pesquisaEntregasBean.filtro.nomeCliente}" />
+	    		
+	    		<p:outputLabel value="Status" />
+	    		<p:selectManyCheckbox value="#{pesquisaEntregasBean.filtro.statuses}">
+	    			<f:selectItems value="#{pesquisaEntregasBean.statuses}" var="status"
+	    				itemValue="#{status}" itemLabel="#{status.descricao}" />
+	    		</p:selectManyCheckbox>
+	    	</p:panelGrid>
+	    	
+	    	<p:dataTable id="entregasTable" value="#{pesquisaEntregasBean.model}" var="entrega"
+		    		style="margin-top: 20px" emptyMessage="Nenhuma entrega encontrada."
+		    		rows="15" paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom"
+		    		lazy="true">
+	    		<p:column headerText="Número" style="text-align: center; width: 100px"
+	    				sortBy="#{entrega.id}">
+	    			<h:outputText value="#{entrega.id}"/>
+	    		</p:column>
+	    		<!-- 
+	    		<p:column headerText="Cliente" sortBy="#{entrega.pedido.cliente.nome}">
+	    			<h:outputText value="#{entrega.pedido.cliente.nome}"/>
+	    		</p:column>
+	    		 -->
+	    		<p:column headerText="Entregador">
+	    			<h:outputText value="#{entrega.entregador.nome}"/>
+	    		</p:column>
+	    		<p:column headerText="Data de distribuição" style="text-align: center; width: 140px">
+	    			<h:outputText value="#{entrega.dataDistribuicao}">
+	    				<f:convertDateTime pattern="dd/MM/yyyy" />
+	    			</h:outputText>
+	    		</p:column>
+	    		<!-- 
+	    		<p:column headerText="Valor total" style="text-align: right; width: 120px"
+	    				sortBy="#{entrega.pedido.valorTotal}">
+	    			<h:outputText value="#{entrega.pedido.valorTotal}">
+	    				<f:convertNumber type="currency"/>
+	    			</h:outputText>
+	    		</p:column>
+	    		 -->
+	    		<p:column headerText="Status" style="width: 100px">
+	    			<h:outputText value="#{entrega.status.descricao}"/>
+	    		</p:column>
+	    		<p:column style="text-align: center; width: 50px" exportable="false">
+	    			<p:button icon="ui-icon-pencil" title="Editar" outcome="/entregas/CadastroEntrega">
+	    				<f:param name="entrega" value="#{entrega.id}" />
+	    			</p:button>
+	    		</p:column>
+
+				<p:column style="width: 50px; text-align: center">
+					<p:commandButton icon="ui-icon-trash" title="Excluir"
+						oncomplete="PF('confirmacaoExclusao').show()" process="@this"
+						update=":frmPesquisaEntregas:confirmacaoExclusaoDialog">
+						<f:setPropertyActionListener
+							target="#{pesquisaEntregasBean.entregaSelecionada}" value="#{entrega}" />
+					</p:commandButton>
+				</p:column>
+				
+	    		<p:column style="text-align: center; width: 50px" exportable="false">
+	    			<p:button icon="ui-icon-pin-s" title="Rota" outcome="/entregas/RotaEntrega">
+	    				<f:param name="entrega_id" value="#{entrega.id}" />
+	    			</p:button>
+	    		</p:column>				
+				
+			</p:dataTable>
+	    	
+	    	<p:confirmDialog header="Exclusão de entrega" 
+	    		message="Tem certeza que deseja excluir a entrega #{pesquisaEntregaBean.itemSelecionado.id}?"
+	    		widgetVar="confirmacaoExclusao"	id="confirmacaoExclusaoDialog">
+	    		<p:button value="Não" onclick="PF('confirmacaoExclusao').hide(); return false;" />
+	    		<p:commandButton value="Sim" oncomplete="PF('confirmacaoExclusao').hide();"
+	    			action="#{pesquisaEntregaBean.excluir}" process="@this"
+	    			update=":frmPesquisaEntregas:entregasTable" id="yesButton" />
+	    	</p:confirmDialog>  	    	
+	    	
+    	</h:form>
+    </ui:define>
+</ui:composition>

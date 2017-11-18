@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>Seleção de pedido</title>
+	
+	<h:outputStylesheet library="css" name="sistema.css" />
+	
+	<style>
+		body {
+			margin: 10px
+		}
+	</style>
+</h:head>
+<h:body>
+<div style="height: 450px">
+	<h:form>
+    	<div style="padding-top: 5px">
+    		<p:outputLabel id="numero" value="Número dos pedidos de " />
+    		<h:panelGroup>
+	    			<p:inputText size="10" value="#{selecaoPedidoBean.filtro.numeroDe}" />
+	    			a
+	    			<p:inputText size="10" value="#{selecaoPedidoBean.filtro.numeroAte}" />
+	    		</h:panelGroup>
+    		<p:spacer width="10px"/>
+    		<p:commandButton value="Pesquisar" action="#{selecaoPedidoBean.pesquisar}"
+    				update="@form" />
+    	</div>
+    	
+    	<p:dataTable value="#{selecaoPedidoBean.pedidosFiltrados}" var="pedido"
+    		style="margin-top: 20px" emptyMessage="Nenhum pedido encontrado." rows="10"
+    		paginator="true" paginatorAlwaysVisible="false" paginatorPosition="bottom">
+    		<p:column headerText="Código" style="text-align: center; width: 40px">
+    			<h:outputText value="#{pedido.id}" />
+    		</p:column>
+    		<p:column headerText="Nome">
+    			<h:outputText value="#{pedido.cliente.nome}" />
+    		</p:column>
+    		<p:column style="width: 30px; text-align: center">
+    			<p:commandButton icon="ui-icon-check" title="Selecionar"
+    				process="@this" action="#{selecaoPedidoBean.selecionar(pedido)}" />
+    		</p:column>
+    	</p:dataTable>
+	</h:form>
+</div>
+</h:body>
+</html>
