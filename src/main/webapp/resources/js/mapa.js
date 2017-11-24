@@ -10,6 +10,7 @@ var image = 'imagens/delivery.png';
 //ponto do entregador
 var marker;
 var waypts = []; // pontos para entrega
+var localizacao;
 
 function entregador(xhr, status, args) {
 	var latlng = new google.maps.LatLng(args.coord.latitude, args.coord.longitude);
@@ -22,6 +23,8 @@ function initMap(xhr, status, args) {
 	
 	
 	var qtd_entregas = args.coord.length;
+	var latInicial = args.localizacao.latitude;
+    var lngInicial = args.localizacao.longitude;
 
 	for (var i = 0; i < args.coord.length; i++) {
 		waypts.push({
@@ -29,25 +32,38 @@ function initMap(xhr, status, args) {
 			stopover : true,
 		});
 	}
+	
+	// verifica se tenho a localizacao da empresa
+	// caso contrario pego a localizacao do navegador que esta sendo usado
+	if(latInicial == null) {
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(function(position) {
+				localizacao = {
+					lat : position.coords.latitude,
+					lng : position.coords.longitude
+				};
+				
+			});
+		}
+		
+	} else {
+		// pega a passada por parametro )
+		localizacao = {
+			lat : Number(latInicial),
+			lng : Number(lngInicial)
+		};	
+	}
+	
+	
 	// verifica se existe o id na pagina
 	if (document.getElementById('map')) {
 		// cria o mapa
 		map = new google.maps.Map(document.getElementById('map'), {
-			center : {
-				lat : -20.452458,
-				lng : -45.438858
-			},
 			zoom : 12
 		});
 	} 
 
 	
-
-	// pega a localização ( IFMG )
-	localizacao = {
-		lat : -20.452559,
-		lng : -45.438597
-	};
 
 	// onde o icone será colocado inicialmente
 	marker = new google.maps.Marker({

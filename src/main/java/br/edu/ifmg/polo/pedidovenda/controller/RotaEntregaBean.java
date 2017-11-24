@@ -64,15 +64,23 @@ public class RotaEntregaBean implements Serializable {
 			coord = new Coordenadas();
 		}
 
-		// envia para javaScript
-		RequestContext context = RequestContext.getCurrentInstance();
-		context.addCallbackParam("coord", new org.primefaces.json.JSONArray(coordenadas));
 	}
 
 	public void gerarMapa() {
+
+		Empresa emp = empresas.buscarEmpresa();
+		Coordenadas coordInicial = new Coordenadas();
+		// se existe empresa cadastrada, passo as coordenadas dela
+		// caso nao exista, o JS pegará a localização do navegador
+		if (emp != null) {			
+			coordInicial.setLatitude(emp.getLatitude());
+			coordInicial.setLongitude(emp.getLongitude());
+		}
+
 		// é passado as coordenadas da entrega para a função javascript e gerado o mapa
 		RequestContext context = RequestContext.getCurrentInstance();
 		context.addCallbackParam("coord", new org.primefaces.json.JSONArray(coordenadas));
+		context.addCallbackParam("localizacao", coordInicial);
 	}
 
 	public void atualizaPosicao() {
@@ -115,8 +123,7 @@ public class RotaEntregaBean implements Serializable {
 		String ordem[] = ordemEntregas.split(",");
 
 		if (ordem[0] == "") {
-			FacesUtil.addErrorMessage(
-					"A rota não foi gerada!!");
+			FacesUtil.addErrorMessage("A rota não foi gerada!!");
 		} else {
 
 			// cria uma nova Classe que está sendo usada no RotaEntrega.xhtml para preencher
@@ -150,16 +157,17 @@ public class RotaEntregaBean implements Serializable {
 			distancia.retornaDistancia(loc_entregador, tempoEntregas);
 			// flag para mostrar a tabela de dados
 			this.tabelaDistancia = true;
-			
+
 			// atualizo a duracao e distancia caso a entrega ja tenha sido realizada
-			for(int i = 0; i < tempoEntregas.size(); i++) {
-				
-				if((tempoEntregas.get(i).getStatus().equals("DEVOLVIDA")) || (tempoEntregas.get(i).getStatus().equals("ENTREGUE"))
+			for (int i = 0; i < tempoEntregas.size(); i++) {
+
+				if ((tempoEntregas.get(i).getStatus().equals("DEVOLVIDA"))
+						|| (tempoEntregas.get(i).getStatus().equals("ENTREGUE"))
 						|| (tempoEntregas.get(i).getStatus().equals("ENCERRADO"))) {
 					tempoEntregas.get(i).setDistancia("--");
 					tempoEntregas.get(i).setDistancia("--");
 				}
-				
+
 			}
 
 		}

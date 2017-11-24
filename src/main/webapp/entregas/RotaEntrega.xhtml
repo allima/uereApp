@@ -30,7 +30,7 @@
 			<p:outputLabel
 				value="Entregador: #{rotaEntregaBean.entrega.entregador.nome}" />
 
-			<p:poll interval="3" listener="#{rotaEntregaBean.atualizaPosicao()}"
+			<p:poll interval="5" listener="#{rotaEntregaBean.atualizaPosicao()}"
 				widgetVar="myPoll" autoStart="false" update="entregasTempo"
 				oncomplete="entregador(xhr, status, args)" />
 
